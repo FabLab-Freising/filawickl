@@ -40,4 +40,8 @@ void loop() {
   oPuller.updateSpeed(speed_mm_per_min);
 
 
+  //print Info on screen?
+  //change Parameters on the fly?
+  
+
 }
