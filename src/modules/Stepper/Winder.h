@@ -25,7 +25,7 @@ public:
     Winder(/* args */);
     ~Winder();
 
-
+    //this function is blocking untill the endstop is hit.
     void initialize();
 
     void update(); 
