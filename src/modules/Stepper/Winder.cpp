@@ -6,7 +6,7 @@ Winder::Winder()
     WStepper = new AccelStepper(AccelStepper::DRIVER, WINDER_STEP_PIN, WINDER_DIR_PIN, WINDER_EN_PIN, WINDER_ENDSTOP_MIN);
 
     WStepper->setMaxSpeed(1000);
-    WStepper->setAcceleration(2000);
+    WStepper->setAcceleration(8000);
 
     WStepper->setEnablePin(WINDER_EN_PIN);
     WStepper->setPinsInverted(false, false, true); // invert logic of enable pin
@@ -47,34 +47,39 @@ void Winder::initialize()
 void Winder::setSpoolerSpeedPercent(uint8_t SpeedPercent)
 {
     WinderSpeed = (float)SpeedPercent/100 * 255.0f;
+    //Below a raw value of 100 the motor stalls.
+    //To prevent the motor from degrading to much everyting under raw=100 is reduced to zero
+    if (WinderSpeed < 100)
+        WinderSpeed = 0;
+    
 }
 
 void Winder::update()
 {
-    WStepper->runSpeed();
+    //WStepper->run();
 
     // change direction if a endstop is detected
     if (digitalRead(WINDER_ENDSTOP_MIN) == 1)
     {
         direction = true;
-        Serial.println("Direction Change: true");
+        //Serial.println("Direction Change: true");
     }
     if (digitalRead(WINDER_ENDSTOP_MAX) == 1)
     {
         direction = false;
-        Serial.println("Direction Change: false");
+        //Serial.println("Direction Change: false");
     }
 
     switch (wState)
     {
     case SENSOR_UNTRIGGERED:
-        // Serial.println("SENSOR_UNTRIGGERED");
+        //Serial.println("SENSOR_UNTRIGGERED");
         if (digitalRead(WINDER_SPOOL_ROTATION_SEN) == HIGH)
             wState = STATE::SENSOR_TRIGGERD;
 
         break;
     case SENSOR_TRIGGERD:
-        // Serial.println("SENSOR_TRIGGERD");
+         //Serial.println("SENSOR_TRIGGERD");
         // move winder
         if (direction)
             currentPos += WINDER_FILAMENT_WIDTH_STEPS;
@@ -82,9 +87,19 @@ void Winder::update()
             currentPos -= WINDER_FILAMENT_WIDTH_STEPS;
 
         WStepper->moveTo(currentPos);
-        WStepper->runToPosition();
 
-        wState = STATE::WINDER_MOVED;
+        wState = WINDER_MOVING;
+        //WStepper->runToPosition();
+
+        break;
+    case WINDER_MOVING:
+         //Serial.println("WINDER_MOVING");
+         //winder is in moving progress
+         //this state enables asynchronus movement
+        if (!WStepper->run())
+        {
+            wState = STATE::WINDER_MOVED;
+        }
         break;
     case WINDER_MOVED:
         // Serial.println("WINDER_MOVED");
@@ -103,8 +118,4 @@ void Winder::update()
     // Serial.println(currentPos);
 
     analogWrite(WINDER_SPOOLER_MOTOR, WinderSpeed);
-}
-
-Winder::~Winder()
-{
 }

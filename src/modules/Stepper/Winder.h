@@ -11,6 +11,7 @@ private:
     enum STATE
     {
         SENSOR_TRIGGERD,
+        WINDER_MOVING,
         WINDER_MOVED,
         SENSOR_UNTRIGGERED
     };
@@ -24,7 +25,6 @@ private:
 
 public:
     Winder(/* args */);
-    ~Winder();
 
     //this function is blocking untill the endstop is hit.
     void initialize();

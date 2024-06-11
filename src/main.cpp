@@ -1,12 +1,14 @@
 #include <Arduino.h>
 #include "modules/Stepper/Winder.h"
-#include "modules/Stepper/Puller.h"
+#include "modules/Stepper/Brake.h"
 #include "modules/Regulator/Regulator.h"
 #include "modules/DiameterSensor/DiameterSensor.h"
 #include "modules/Display/Display.h"
+#include <AccelStepper.h>
+
 
 Winder oWinder;
-Puller oPuller;
+Brake oBrake;
 Regulator oRegulator;
 DiameterSensor oDiameterSensor;
 Display oDisplay;
@@ -19,7 +21,7 @@ delay(2000);
   Serial.begin(115200);
 
   oWinder.initialize();
-  oPuller.begin();
+  oBrake.begin();
   oRegulator.begin();
   oDiameterSensor.begin();
 
@@ -28,7 +30,9 @@ delay(2000);
   //1.75mm initial diameter
   oRegulator.setSetpoint_mm(1.75);
 
-  oWinder.setSpoolerSpeedPercent(0);
+  oWinder.setSpoolerSpeedPercent(40);
+
+  oBrake.SetSpeed(200);
 
 
 }
@@ -37,13 +41,13 @@ void loop() {
 
   //update the winder mechanism
   oWinder.update();
+  oBrake.update();
 
   //get the actual diameter reading from diameterSensor in mm
-  double FilamentDiameter = oDiameterSensor.getActualDiameter_mm();
+  //double FilamentDiameter = oDiameterSensor.getActualDiameter_mm();
   //feed the regulator
-  uint16_t speed_mm_per_min = oRegulator.update(FilamentDiameter);
+  //uint16_t speed_mm_per_min = oRegulator.update(FilamentDiameter);
   //update the puller so that it'll make the right diameter
-  oPuller.updateSpeed(speed_mm_per_min); 
   
 
   //print Info on screen?
