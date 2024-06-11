@@ -20,15 +20,18 @@ private:
     AccelStepper* WStepper;
     bool direction = true;
     int16_t currentPos = 0;
+    uint8_t WinderSpeed = 0;
 
 public:
     Winder(/* args */);
     ~Winder();
 
-
+    //this function is blocking untill the endstop is hit.
     void initialize();
 
     void update(); 
+
+    void setSpoolerSpeedPercent(uint8_t SpeedPercent);
 
 
 };

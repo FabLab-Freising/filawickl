@@ -25,7 +25,7 @@ void Winder::initialize()
 
     pinMode(WINDER_SPOOLER_MOTOR, OUTPUT);
 
-    digitalWrite(WINDER_SPOOLER_MOTOR, HIGH);
+
 
     while (initializing == true)
     {
@@ -39,6 +39,14 @@ void Winder::initialize()
         }
     }
     Serial.println("Winder @ Position 0");
+
+    analogWrite(WINDER_SPOOLER_MOTOR, WinderSpeed);
+}
+
+
+void Winder::setSpoolerSpeedPercent(uint8_t SpeedPercent)
+{
+    WinderSpeed = (float)SpeedPercent/100 * 255.0f;
 }
 
 void Winder::update()
@@ -93,6 +101,8 @@ void Winder::update()
     // Serial.print(digitalRead(Y_MIN_PIN));
     // Serial.println(digitalRead(X_MIN_PIN));
     // Serial.println(currentPos);
+
+    analogWrite(WINDER_SPOOLER_MOTOR, WinderSpeed);
 }
 
 Winder::~Winder()
