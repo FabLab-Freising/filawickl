@@ -23,6 +23,9 @@ private:
     int16_t currentPos = 0;
     uint8_t WinderSpeed = 0;
 
+    float filamentDia;
+
+
 public:
     Winder(/* args */);
 
@@ -32,6 +35,8 @@ public:
     void update(); 
 
     void setSpoolerSpeedPercent(uint8_t SpeedPercent);
+
+    float getWinderPos_mm();
 
 
 };

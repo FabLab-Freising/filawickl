@@ -40,6 +40,8 @@ void Winder::initialize()
     }
     Serial.println("Winder @ Position 0");
 
+    filamentDia = WINDER_FILAMENT_DIA;
+
     analogWrite(WINDER_SPOOLER_MOTOR, WinderSpeed);
 }
 
@@ -82,9 +84,15 @@ void Winder::update()
          //Serial.println("SENSOR_TRIGGERD");
         // move winder
         if (direction)
-            currentPos += WINDER_FILAMENT_WIDTH_STEPS;
+            currentPos += round(((float)WINDER_STEPS_PER_MM*filamentDia));
         else
-            currentPos -= WINDER_FILAMENT_WIDTH_STEPS;
+            currentPos -= round(((float)WINDER_STEPS_PER_MM*filamentDia));
+
+        if (currentPos < 0)
+        {
+            currentPos = 0;
+        }
+        
 
         WStepper->moveTo(currentPos);
 
@@ -118,4 +126,9 @@ void Winder::update()
     // Serial.println(currentPos);
 
     analogWrite(WINDER_SPOOLER_MOTOR, WinderSpeed);
+}
+
+float Winder::getWinderPos_mm()
+{
+    return (float)currentPos / (float)WINDER_STEPS_PER_MM;
 }

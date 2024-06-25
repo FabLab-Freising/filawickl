@@ -3,7 +3,7 @@
 #include "modules/Stepper/Brake.h"
 #include "modules/Regulator/Regulator.h"
 #include "modules/DiameterSensor/DiameterSensor.h"
-#include "modules/Display/Display.h"
+#include "modules/UI/UI.h"
 #include <AccelStepper.h>
 
 
@@ -11,7 +11,7 @@ Winder oWinder;
 Brake oBrake;
 Regulator oRegulator;
 DiameterSensor oDiameterSensor;
-Display oDisplay;
+UI* UI_Istance;
 
 
 void setup() {
@@ -20,12 +20,15 @@ delay(2000);
 
   Serial.begin(115200);
 
-  oDisplay.begin();
+  UI_Istance = new UI(&oWinder);
+  UI_Istance->begin();
 
   oWinder.initialize();
   oBrake.begin();
   oRegulator.begin();
   oDiameterSensor.begin();
+
+
 
 
 
@@ -60,6 +63,6 @@ void loop() {
   //change Parameters on the fly?
 
   //update Display
-  oDisplay.update(); 
+  UI_Istance->update(); 
 
 }
