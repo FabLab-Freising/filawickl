@@ -11,17 +11,17 @@ Winder oWinder;
 Brake oBrake;
 Regulator oRegulator;
 DiameterSensor oDiameterSensor;
-UI* UI_Istance;
+UI* UI_Instance;
 
 
 void setup() {
 
 delay(2000);
 
-  Serial.begin(115200);
+  Serial.begin(250000);
 
-  UI_Istance = new UI(&oWinder);
-  UI_Istance->begin();
+  UI_Instance = new UI(&oWinder);
+  UI_Instance->begin();
 
   oWinder.initialize();
   oBrake.begin();
@@ -50,6 +50,8 @@ void loop() {
   oWinder.update();
   oBrake.update();
 
+  oBrake.SetSpeed(UI_Instance->getEncoderValue());
+
 
 
   //get the actual diameter reading from diameterSensor in mm
@@ -63,6 +65,6 @@ void loop() {
   //change Parameters on the fly?
 
   //update Display
-  UI_Istance->update(); 
+  UI_Instance->update(); 
 
 }

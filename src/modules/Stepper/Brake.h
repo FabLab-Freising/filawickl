@@ -7,6 +7,9 @@ class Brake
 {
 private:
     AccelStepper* BStepper;
+
+    uint16_t speed = 0;
+
 public:
     Brake(/* args */);
 

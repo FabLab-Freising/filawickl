@@ -5,6 +5,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1305.h>
 #include "Frames.h"
+#include <Encoder.h>
 
 class UI
 {
@@ -15,6 +16,8 @@ private:
 
     Winder* _winder;
     Adafruit_SSD1305* display;
+
+    Encoder* _encoder;
 
     unsigned char* winder_animation[3] = {Winder_Left_bits, Winder_Middle_bits, Winder_Right_bits};
     uint8_t WinderAnimationFrame = 0;
@@ -36,6 +39,11 @@ public:
 
     void begin();
     void update();
+
+    int32_t getEncoderValue()
+    {
+        return (_encoder->read());
+    }
 
     float GetWinderPositionMM()
     {

@@ -16,12 +16,23 @@ Brake::Brake(/* args */)
 
 void Brake::begin()
 {
+
     BStepper->setSpeed(0);
 }
 
 void Brake::SetSpeed(uint16_t mm_per_min)
 {
-    BStepper->setSpeed(mm_per_min);
+
+    if (speed != mm_per_min)
+    {
+        BStepper->setSpeed(mm_per_min);
+        speed = mm_per_min;
+        Serial.println(mm_per_min);
+
+    }
+    
+
+    
 }
 
 void Brake::update()

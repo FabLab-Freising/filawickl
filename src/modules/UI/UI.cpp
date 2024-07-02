@@ -25,6 +25,9 @@ void UI::begin()
     display->setTextSize(1);
     display->setTextColor(WHITE);
     display->println("Filawickl Starting...");
+
+    _encoder = new Encoder(32,47);
+
 }
 
 void UI::update()
@@ -56,7 +59,7 @@ void UI::InnerUpdate()
     display->print(_winder->getWinderPos_mm());
 
 
-    display->display();
+    //display->display();
 }
 
 
