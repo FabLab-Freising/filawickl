@@ -19,6 +19,7 @@ void setup() {
 delay(2000);
 
   Serial.begin(250000);
+  Serial2.begin(115200);
 
   UI_Instance = new UI(&oWinder);
   UI_Instance->begin();
@@ -66,5 +67,11 @@ void loop() {
 
   //update Display
   UI_Instance->update(); 
+
+
+  if (Serial2.available())
+  {
+      Serial.println(Serial2.read());
+  }
 
 }
