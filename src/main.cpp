@@ -50,7 +50,13 @@ void loop() {
   oWinder.update();
   oBrake.update();
 
-  oBrake.SetSpeed(oEncoder->read()*4);
+  int32_t speedScaled = oEncoder->read()*8;
+  //sanity Check
+  if (speedScaled < 0)
+    speedScaled = 0;
+  
+
+  oBrake.SetSpeed(speedScaled);
 
 
 

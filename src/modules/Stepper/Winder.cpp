@@ -89,9 +89,7 @@ void Winder::update()
             currentPos -= round(((float)WINDER_STEPS_PER_MM*filamentDia));
 
         if (currentPos < 0)
-        {
             currentPos = 0;
-        }
         
 
         WStepper->moveTo(currentPos);
