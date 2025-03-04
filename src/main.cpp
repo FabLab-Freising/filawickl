@@ -3,7 +3,7 @@
 #include "modules/Stepper/Brake.h"
 #include "modules/Regulator/Regulator.h"
 #include "modules/DiameterSensor/DiameterSensor.h"
-#include "modules/UI/UI.h"
+#include <Encoder.h>
 #include <AccelStepper.h>
 
 
@@ -11,7 +11,7 @@ Winder oWinder;
 Brake oBrake;
 Regulator oRegulator;
 DiameterSensor oDiameterSensor;
-UI* UI_Instance;
+Encoder* oEncoder;
 
 
 void setup() {
@@ -21,19 +21,18 @@ delay(2000);
   Serial.begin(250000);
   Serial2.begin(115200);
 
-  UI_Instance = new UI(&oWinder);
-  UI_Instance->begin();
+  //UI_Instance = new UI(&oWinder);
+  //UI_Instance->begin();
 
   oWinder.initialize();
   oBrake.begin();
   oRegulator.begin();
   oDiameterSensor.begin();
 
+  oEncoder = new Encoder(32,47);
 
+  oWinder.setSpoolerSpeedPercent(100);
 
-
-
-  
 
   //1.75mm initial diameter
   //oRegulator.setSetpoint_mm(1.75);
@@ -51,7 +50,7 @@ void loop() {
   oWinder.update();
   oBrake.update();
 
-  oBrake.SetSpeed(UI_Instance->getEncoderValue());
+  oBrake.SetSpeed(oEncoder->read()*4);
 
 
 
@@ -64,9 +63,6 @@ void loop() {
 
   //print Info on screen?
   //change Parameters on the fly?
-
-  //update Display
-  UI_Instance->update(); 
 
 
   if (Serial2.available())
